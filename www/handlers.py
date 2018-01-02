@@ -18,6 +18,8 @@ from apis import APIValueError, APIResourceNotFoundError, APIError, APIPermissio
 from models import User, Comment, Blog, next_id
 from config import configs
 
+import os
+
 COOKIE_NAME = 'awesession'
 _COOKIE_KEY = configs.session.secret
 
@@ -182,3 +184,8 @@ def api_create_blog(request, *, name, summary, content):
     blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
     yield from blog.save()
     return blog
+
+@get('/api/image/expression/{id}')
+def api_get_expression(*, id):
+    f = open(os.path.abspath('.')+'/'+ id, 'rb')
+    return f.read()
